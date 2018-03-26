@@ -1,12 +1,12 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
 using m0202.Exceptions;
 
 namespace m0202
 {
-    public class CustomIntParser
+    public static class CustomIntParser
     {
-        public static bool TryParse(string str,
-                                    out int result)
+        public static int Parse(string str)
         {
             if (string.IsNullOrWhiteSpace(str))
             {
@@ -15,21 +15,26 @@ namespace m0202
 
             str = str.Trim();
 
-            Match match = Regex.Match(str, "^-?[0-9a-fA-F]+$");
-
-            if (!match.Success)
+            if (!Regex.Match(str, "^-?[0-9a-fA-F]+$").Success)
             {
                 throw new CustomIntParserException("This is not a decimal integer.");
             }
 
-            result = 0;
+            bool isNegative = Regex.Match(str, "^-{1}").Success;
 
-            return true;
+            if (isNegative)
+            {
+                str = str.Substring(1);
+            }
+
+            return isNegative ? -StringToInt(str) : StringToInt(str);
         }
 
-        public static int Parse(string str)
+        private static int StringToInt(string str)
         {
-            return 0;
+            return str.Aggregate(
+                0,
+                (number, digit) => number * 10 + (digit - '0'));
         }
     }
 }
