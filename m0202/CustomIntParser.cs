@@ -11,17 +11,20 @@ namespace m0202
         {
             if (string.IsNullOrWhiteSpace(str))
             {
-                throw new CustomIntParserException("String cannot be empty.");
+                throw new CustomIntParserException(
+                    $"Parameter {nameof(str)} cannot be an empty string.");
             }
 
             str = str.Trim();
 
             if (!Regex.Match(str, "^-?[0-9a-fA-F]+$").Success)
             {
-                throw new CustomIntParserException("This is not a decimal integer.");
+                throw new CustomIntParserException(
+                    $"Parameter {nameof(str)} does not represent" +
+                    "a decimal integer.");
             }
 
-            bool isNegative = Regex.Match(str, "^-{1}").Success;
+            var isNegative = Regex.Match(str, "^-{1}").Success;
 
             if (isNegative)
             {
@@ -34,9 +37,12 @@ namespace m0202
             {
                 number = StringToInt(str);
             }
-            catch (OverflowException)
+            catch (OverflowException ex)
             {
-                throw new CustomIntParserException("Integer overflow.");
+                throw new CustomIntParserException(
+                    $"Parameter {nameof(str)} represents an integer" +
+                    $"which is out of limits of {typeof(int)}.",
+                    ex);
             }
 
             return isNegative ? -number : number;
@@ -44,7 +50,7 @@ namespace m0202
 
         private static int StringToInt(string str)
         {
-            int result = str.Aggregate(
+            var result = str.Aggregate(
                 0,
                 (number, digit) => checked(number * 10 + (digit - '0')));
 
