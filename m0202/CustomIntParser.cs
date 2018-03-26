@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using m0202.Exceptions;
 
@@ -27,14 +28,27 @@ namespace m0202
                 str = str.Substring(1);
             }
 
-            return isNegative ? -StringToInt(str) : StringToInt(str);
+            int number;
+
+            try
+            {
+                number = StringToInt(str);
+            }
+            catch (OverflowException)
+            {
+                throw new CustomIntParserException("Integer overflow.");
+            }
+
+            return isNegative ? -number : number;
         }
 
         private static int StringToInt(string str)
         {
-            return str.Aggregate(
+            int result = str.Aggregate(
                 0,
-                (number, digit) => number * 10 + (digit - '0'));
+                (number, digit) => checked(number * 10 + (digit - '0')));
+
+            return result;
         }
     }
 }
