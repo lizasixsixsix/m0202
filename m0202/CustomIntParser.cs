@@ -18,14 +18,14 @@ namespace m0202
 
             str = str.Trim();
 
-            if (!Regex.Match(str, "^-?[0-9a-fA-F]+$").Success)
+            if (!Regex.Match(str, "^-?[0-9]+$").Success)
             {
                 throw new CustomIntParserException(
                     $"Parameter {nameof(str)} does not represent" +
                     "a decimal integer.");
             }
 
-            var isNegative = Regex.Match(str, "^-{1}").Success;
+            var isNegative = Regex.Match(str, "-").Success;
 
             if (isNegative)
             {
