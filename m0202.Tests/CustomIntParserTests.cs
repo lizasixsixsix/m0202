@@ -10,9 +10,10 @@ namespace m0202.Tests
     public class CustomIntParserTests
     {
         [TestMethod]
-        [DataRow("77", 77)]
-        [DataRow("-77", -77)]
+        [DataRow("76", 76)]
+        [DataRow("-76", -76)]
         [DataRow("0", 0)]
+        [DataRow("06", 6)]
         public void Parse_CorrectString_ExpectedResult(
             string str, int number)
         {
@@ -20,9 +21,10 @@ namespace m0202.Tests
         }
 
         [TestMethod]
-        [DataRow("77i")]
-        [DataRow("7 7")]
-        [DataRow("7.7")]
+        [DataRow("76i")]
+        [DataRow("7 6")]
+        [DataRow("7.6")]
+        [DataRow("7,6")]
         [ExpectedException(typeof(CustomIntParserException))]
         public void Parse_IncorrectString_ExceptionThrown(
             string str)
